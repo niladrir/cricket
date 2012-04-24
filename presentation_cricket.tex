@@ -7,7 +7,10 @@
 %\usetheme{Montpellier}
 \usetheme{CambridgeUS}
 
-\usepackage{graphicx,amsmath,amssymb,color,multirow, animate}
+\usepackage{graphicx,amsmath,amssymb,color,multirow, animate, xcolor}
+\setbeamertemplate{navigation symbols}{}
+\newcommand{\blue}[1]{{\color{blue} #1}}
+\newcommand{\red}[1]{{\color{red} #1}}
 
 %\colorlet{newred}{red!60!black}
 %\usecolortheme[named=red]{structure}
@@ -69,24 +72,177 @@ http://www.espncricinfo.com/
 
 \end{frame}
 
+\begin{frame}
+\frametitle{Forms of the game}
+There are 3 forms of cricket matches played internationally:
+\begin{itemize}
+\item Test matches (length = at most for 5 days and 2 innings per side)
+\item One-Day Internationals (length =  7 hours and 50 overs per side)
+\item Twenty20 Internationals (length =  3 hours and 20 overs per side)
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{T20 Data}
+\begin{itemize}
+\item only looked at T20 World Cup Data.
+\item only had 3 World Cups till April 2012. 
+\end{itemize}
+\begin{table}
+\begin{center}
+\begin{tabular}{ccc}
+%  \hline
+  Year & Venue & Number of Teams\\ 
+  \hline
+  2007 & Sou & 12\\ 
+    2009 & Eng & 12\\ 
+    2010 & Wes & 12\\ 
+   \hline
+\end{tabular}
+\end{center}
+\end{table}
+\begin{itemize}	 
+\item next one  in September 2012 in Sri Lanka.
+\end{itemize}
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Webscrapping}
+\begin{itemize}
+\item To get the data we used ``http://www.espncricinfo.com/"
+\item Each match has a match id.
+\item Used a ``for loop" on the match ids to obtain the data for each world cup.
+\begin{table}
+\begin{center}
+\begin{tabular}{ll}
+%  \hline
+%  Year & Venue & Number of Teams\\ 
+%  \hline
+
+  2007 & \small{"http://www.espncricinfo.com/\red{twenty20wc}/engine/match/\blue{287853}.html"} \\ 
+   2009 & \small{"... /\red{wt202009}/engine/match/\blue{355991}.html"} \\ 
+  2010 & \small{"... /\red{world-twenty20-2010}/engine/match/\blue{412678}.html"} \\ 
+%   \hline
+\end{tabular}
+\end{center}
+\end{table}
+\item 3 different ``for loops" for the 3 world cups
+ 
+\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{Webscrapping}
+\begin{itemize}
+\item Nicely formatted tables.
+\begin{verbatim}
+> ls(tables)
+[1] "inningsBat1"  "inningsBat2"  "inningsBowl1" 
+"inningsBowl2" "mgDdRht"      "NULL"
+\end{verbatim}
+\item We wanted the batting scorecards and the bowling cards.
+\item Added other variables like innings, Team, Opponent, Year, Match in the code.
+\end{itemize}
+\end{frame}
+
+
+\begin{frame}[fragile]
+\frametitle{Issues}
+\begin{itemize}
+\item Variable ``Mins" was missing in some of the matches from the batting scorecards.
+\tiny
+\begin{verbatim}
+          V2                              V3 V4 V5 V6 V7     V8 V9
+3  G Gambhir             c & b Mohammad Asif  0  3  0  0   0.00   
+5   V Sehwag                 b Mohammad Asif  5  3  1  0 166.66   
+7 RV Uthappa c  Kamran Akmal b Sohail Tanvir 50 39  4  2 128.20   
+
+\end{verbatim}
+\normalsize
+\item Some had the variable ``Mins".
+\tiny
+\begin{verbatim}
+               V2                 V3 V4 V5 V6 V7 V8     V9
+3     Salman Butt      c Haq b Blain 13 19 23  2  0  56.52
+5     Imran Nazir c Hamilton b Blain  4  8  3  1  0 133.33
+7 Mohammad Hafeez       c & b Wright 18 23 11  3  0 163.63
+\end{verbatim}
+\normalsize
+\item We had to deal with these matches separately (fortunately there were only 4). 
+\end{itemize}
+\end{frame}
+
+
+\begin{frame}[fragile]
+\frametitle{Finally the data...}
+\begin{itemize}
+\item Batting scorecards
+\tiny
+\begin{verbatim}
+         Batsman         Kind_of_Dismissal Runs Balls Fours Sixes Strike_Rate Mins innings Team Opp  match
+3       CH Gayle c  Boucher b van der Wath  117    57     7    10      205.26            1  Wes Sou 287853
+5       DS Smith    c  Boucher b Philander   35    34     3     0      102.94            1  Wes Sou 287853
+7     MN Samuels   c de Villiers b Pollock    6     4     0     1      150.00            1  Wes Sou 287853
+9  S Chanderpaul c  Boucher b van der Wath   11    10     1     0      110.00            1  Wes Sou 287853
+11      DR Smith        c Gibbs b M Morkel    1     4     0     0       25.00            1  Wes Sou 287853
+   Year
+3  2007
+5  2007
+7  2007
+9  2007
+11 2007
+\end{verbatim}
+\normalsize
+\item Bowling cards
+\tiny
+\begin{verbatim}
+            Bowler Overs Maidens Runs_conceded Wickets Econ_rate innings Team Opp  match year
+3       SM Pollock     4       0            52       1     13.00       1  Sou Wes 287853 2007
+5          M Ntini     2       0            19       0      9.50       1  Sou Wes 287853 2007
+7  JJ van der Wath     4       0            33       2      8.25       1  Sou Wes 287853 2007
+9         M Morkel     4       0            30       1      7.50       1  Sou Wes 287853 2007
+11    VD Philander     4       0            35       2      8.75       1  Sou Wes 287853 2007
+\end{verbatim}
+\end{itemize}
+\end{frame}
+
+%\begin{frame}
+%\begin{itemize}
+%\item 79 total matches played.
+%\item 
+%\end{itemize}
+%\end{frame}
 
 
 \begin{frame}
-  \frametitle{T20 World Cup}
+  \frametitle{Analysis}
   
 	\begin{columns}
 	
-		\begin{column}{0.5\textwidth}
-		  \begin{itemize}
-			  \item The bowler can bowl six times in a "Over"
-			  \item The target of the bats man to hit it and get "run"
-			  \item If the ball hits the "stump" the bats man is bold "out"
-			  \item Other outs are catch, run and lbw
-		  \end{itemize}	
+		\begin{column}{0.4\textwidth}
+\begin{itemize}
+\item 79 total matches played.
+\item 15 different Teams.
+\item Number of matches each year:
+\begin{table}[ht]
+\begin{center}
+\begin{tabular}{cc}
+  \hline
+Year & Matches played \\ 
+  \hline
+2007 &  26 \\ 
+2009 &  27 \\ 
+2010 &  26 \\ 
+   \hline
+\end{tabular}
+\end{center}
+\end{table}
+\end{itemize}
 		\end{column}
 		
-		\begin{column}{0.5\textwidth}
-			 \begin{center} \scalebox{0.4}{\includegraphics{match_played.pdf}} \end{center}
+		\begin{column}{0.6\textwidth}
+			 \begin{center} \scalebox{0.5}{\includegraphics{match_played.pdf}} \end{center}
 		\end{column}
 		
 	\end{columns} 
@@ -95,16 +251,16 @@ http://www.espncricinfo.com/
 \end{frame}
 
 \begin{frame}
-  \frametitle{T20 World Cup}
+  \frametitle{Analysis}
   
 	\begin{columns}
 	
 		\begin{column}{0.5\textwidth}
 		  \begin{itemize}
-			  \item The bowler can bowl six times in a "Over"
-			  \item The target of the bats man to hit it and get "run"
-			  \item If the ball hits the "stump" the bats man is bold "out"
-			  \item Other outs are catch, run and lbw
+			  \item Scatterplot of Runs scored vs Balls faced.
+			  \item The red line gives a reference line for 100\% Strike Rate.
+			  \item A match winning batsman would like to score maximum runs in less balls.
+%			  \item Other outs are catch, run and lbw
 		  \end{itemize}	
 		\end{column}
 		
@@ -117,8 +273,118 @@ http://www.espncricinfo.com/
 	
 \end{frame}
 
+\begin{frame}
+  \frametitle{Analysis}
+  
+	\begin{columns}
+	
+		\begin{column}{0.35\textwidth}
+		  \begin{itemize}
+			  \item Scatterplot of Strike Rate vs Balls faced.
+			  \item size gives the number of sixes hit.
+			  \item color gives the number of Fours.
+%			  \item Other outs are catch, run and lbw
+		  \end{itemize}	
+		\end{column}
+		
+		\begin{column}{0.65\textwidth}
+			 \begin{center} \scalebox{0.52}{\includegraphics{sca_srate_ball_four_six.pdf}} \end{center}
+		\end{column}
+		
+	\end{columns} 
+	
+	
+\end{frame}
+
+\begin{frame}
+\frametitle{Scores per innings}
+\begin{itemize}
+\item Summary of scores vs the batting order 
+\begin{table}[ht]
+\begin{center}
+\begin{tabular}{rrrrr}
+%  \hline
+Innings & Average score & Maximum score & Minimum score \\ 
+  \hline
+ 1 & 155.97 & 260 & 73 \\ 
+ 2 & 131.53 & 208 & 14 \\ 
+%   \hline
+\end{tabular}
+\end{center}
+\end{table}
+
+\item Number of matches won vs the batting order
+\begin{table}[ht]
+\begin{center}
+\begin{tabular}{rr}
+%  \hline
+  Innings & Number of matches won \\ 
+  \hline
+1 &  47 \\ 
+ 2 &  32 \\ 
+%   \hline
+\end{tabular}
+\end{center}
+\end{table}
+
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{Best 5 Batsmen}
+\begin{table}[ht]
+\begin{center}
+\begin{tabular}{llrrrrrr}
+  \hline
+ Batsman & Team & M & R & F & S & Bat Ave & StrikeRate \\ 
+  \hline
+KP Pietersen & Eng &  15 & 580 & 60 & 17 & 38.67 & 148.34 \\ 
+DPMD Jayawardene & Sri &  13 & 456 & 46 & 13 & 35.08 & 144.76 \\ 
+TM Dilshan & Sri &  17 & 453 & 58 & 8 & 26.65 & 132.46 \\ 
+G Gambhir & Ind &  15 & 444 & 51 & 6 & 29.60 & 119.35 \\ 
+Kamran Akmal  & Pak &  18 & 412 & 37 & 15 & 22.89 & 121.89 \\ 
+   \hline
+\end{tabular}
+\end{center}
+\end{table}
+\end{frame}
+
+\begin{frame}
+\frametitle{Best 5 Bowlers}
+\begin{table}[ht]
+\begin{center}
+\begin{tabular}{llrrrrr}
+  \hline
+Bowler & Team & Match & Overs & Wickets & Bowl Ave & Econ Rate \\ 
+  \hline
+Shahid Afridi & Pak &  20 & 80.0 & 27 & 19.22 & 6.49 \\ 
+Umar Gul & Pak &  14 & 52.1 & 26 & 12.04 & 6.05 \\ 
+SL Malinga & Sri &  18 & 59.3 & 25 & 17.84 & 7.52 \\ 
+Saeed Ajmal & Pak &  13 & 50.2 & 23 & 14.43 & 6.67 \\ 
+ MG Johnson & Aus &  14 & 52.1 & 20 & 17.55 & 6.79 \\ 
+   \hline
+\end{tabular}
+\end{center}
+\end{table}
+\end{frame}
+
+\begin{frame}
+\frametitle{If this interests you ...}
+\begin{itemize}
+\item Join ISU cricket Club. \\
+http://www.stuorg.iastate.edu/cricket/
+\item ISU is ranked No. 8 in the country. \\
+http://americancollegecricket.com/2012/04/16/new-rankings/
+\end{itemize}
+\end{frame}
+
+
 
 \end{document}
+
+
+%=====================================================================
+%=====================================================================
 
 \begin{frame}
   \frametitle{We want to see}
